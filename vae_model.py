@@ -74,7 +74,26 @@ class VAE(nn.Module):
         return sc_feat32 , sc_feat16 , sc_feat8 , sc_feat4
     
     def decoder(self, z, sc_feat32, sc_feat16, sc_feat8, sc_feat4):
-        pass
+        x = z.view(-1, self.hidden_size, 1, 1)
+        x = self.dec_upsamp1(x)
+        x = torch.cat([x, sc_feat4], 1)
+        x = F.relu(self.dec_conv1(x))
+        x = self.dec_bn1(x)
+        x = self.dec_upsamp2(x)
+        x = torch.cat([x, sc_feat8], 1)
+        x = F.relu(self.dec_conv2(x))
+        x = self.dec_bn2(x)
+        x = self.dec_upsamp3(x)
+        x = torch.cat([x, sc_feat16], 1)
+        x = F.relu(self.dec_conv3(x))
+        x = self.dec_bn3(x)
+        x = self.dec_upsamp4(x)
+        x = torch.cat([x, sc_feat32], 1)
+        x = F.relu(self.dec_conv4(x))
+        x = self.dec_bn4(x)
+        x = self.dec_upsamp5(x)
+        x = torch.tanh(self.dec_conv5(x))
+        return x
     
     def forward(self, color, greylevel, z_in=None):
         pass
