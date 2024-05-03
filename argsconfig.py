@@ -1,3 +1,4 @@
+# Declare hyperparameters
 class ArgsConfig:
     GPU = 1
     EPOCHS = 2
